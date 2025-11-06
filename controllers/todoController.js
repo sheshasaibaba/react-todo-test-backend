@@ -55,12 +55,17 @@ const getTodo = async (req, res, next) => {
 // @access  Private
 const createTodo = async (req, res, next) => {
   try {
-    const { title, description, completed } = req.body;
+    const { taskName } = req.body;
 
+    // Auto-populate all fields with default values
     const todo = await Todo.create({
-      title,
-      description,
-      completed: completed || false,
+      taskName,
+      progress: 0,
+      importance: 1,
+      completed: false,
+      location: '',
+      assignedTo: '',
+      coordinateWith: '',
       user: req.user._id,
     });
 
@@ -95,7 +100,17 @@ const updateTodo = async (req, res, next) => {
       });
     }
 
-    todo = await Todo.findByIdAndUpdate(req.params.id, req.body, {
+    // Update the todo with the provided fields
+    const updateFields = {};
+    if (req.body.taskName !== undefined) updateFields.taskName = req.body.taskName;
+    if (req.body.progress !== undefined) updateFields.progress = req.body.progress;
+    if (req.body.importance !== undefined) updateFields.importance = req.body.importance;
+    if (req.body.completed !== undefined) updateFields.completed = req.body.completed;
+    if (req.body.location !== undefined) updateFields.location = req.body.location;
+    if (req.body.assignedTo !== undefined) updateFields.assignedTo = req.body.assignedTo;
+    if (req.body.coordinateWith !== undefined) updateFields.coordinateWith = req.body.coordinateWith;
+
+    todo = await Todo.findByIdAndUpdate(req.params.id, updateFields, {
       new: true,
       runValidators: true,
     });

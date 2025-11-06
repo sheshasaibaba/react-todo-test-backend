@@ -14,31 +14,49 @@ const handleValidationErrors = require('../middleware/validation');
 
 // Validation rules
 const todoValidation = [
-  body('title')
+  body('taskName')
     .trim()
     .notEmpty()
-    .withMessage('Title is required')
+    .withMessage('Task name is required')
     .isLength({ max: 200 })
-    .withMessage('Title cannot exceed 200 characters'),
-  body('description')
-    .optional()
-    .isLength({ max: 1000 })
-    .withMessage('Description cannot exceed 1000 characters'),
+    .withMessage('Task name cannot exceed 200 characters'),
 ];
 
 const updateTodoValidation = [
-  body('title')
+  body('taskName')
     .optional()
     .trim()
     .notEmpty()
-    .withMessage('Title cannot be empty')
+    .withMessage('Task name cannot be empty')
     .isLength({ max: 200 })
-    .withMessage('Title cannot exceed 200 characters'),
-  body('description')
+    .withMessage('Task name cannot exceed 200 characters'),
+  body('progress')
     .optional()
-    .isLength({ max: 1000 })
-    .withMessage('Description cannot exceed 1000 characters'),
-  body('completed').optional().isBoolean().withMessage('Completed must be a boolean'),
+    .isInt({ min: 0, max: 100 })
+    .withMessage('Progress must be an integer between 0 and 100'),
+  body('importance')
+    .optional()
+    .isInt({ min: 1, max: 10 })
+    .withMessage('Importance must be an integer between 1 and 10'),
+  body('completed')
+    .optional()
+    .isBoolean()
+    .withMessage('Completed must be a boolean'),
+  body('location')
+    .optional()
+    .trim()
+    .isString()
+    .withMessage('Location must be a string'),
+  body('assignedTo')
+    .optional()
+    .trim()
+    .isString()
+    .withMessage('AssignedTo must be a string'),
+  body('coordinateWith')
+    .optional()
+    .trim()
+    .isString()
+    .withMessage('CoordinateWith must be a string'),
 ];
 
 // All routes require authentication
